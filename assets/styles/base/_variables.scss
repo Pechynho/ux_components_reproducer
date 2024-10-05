@@ -1,0 +1,63 @@
+html {
+  --color-border-main: 209 213 219; // gray-300
+
+  --color-background-body: 250 250 250; // gray-50
+  --color-background-input: 255 255 255; // white
+  --color-background-input-disabled: 243 244 246; // gray-100
+  --color-background-neutral-1: 209 213 219; // gray-300;
+  --color-background-neutral-2: 255 255 255; // white
+
+  --color-text-main: 17 24 39; // gray-900
+  --color-text-secondary: 107 114 128; // gray-500
+  --color-text-disabled: 107 114 128; // gray-500
+
+  --color-placeholder-main: 107 114 128; // gray-500
+
+  --color-brand: 29 78 216; // blue-700
+  --color-brand-active: 30 64 175; // blue-800
+  --color-brand-disabled: 147 197 253; // blue-300
+  --color-brand-ring: 147 197 253; // blue-300
+  --color-brand-accent: 239 246 255; // blue-50
+  --color-brand-inverse: 255 255 255; // white
+  --color-brand-text: 30 58 138; // blue-900
+
+  --color-danger: 185 28 28; // red-700
+  --color-danger-active: 153 27 27; // red-800
+  --color-danger-disabled: 252 165 165; // red-300
+  --color-danger-ring: 252 165 165; // red-300
+  --color-danger-accent: 254 242 242; // red-50
+  --color-danger-inverse: 255 255 255; // white
+  --color-danger-text: 127 29 29; // red-900
+
+  &.dark {
+    --color-border-main: 75 85 99; // gray-600
+
+    --color-background-body: 17 24 39; // gray-900
+    --color-background-input: 31 41 55; // gray-800
+    --color-background-input-disabled: 55 65 81; // bg-gray-700
+    --color-background-neutral-1: 31 41 55; // gray-800
+    --color-background-neutral-2: 31 41 55; // gray-800
+
+    --color-text-main: 255 255 255; // white
+    --color-text-secondary: 209 213 219; // gray-300
+    --color-text-disabled: 156 163 175; // gray-400
+
+    --color-placeholder-main: 161 161 170; // gray-400
+
+    --color-brand: 37 99 235; // blue-600
+    --color-brand-active: 29 78 216; // blue-700
+    --color-brand-disabled: 147 197 253; // blue-300
+    --color-brand-ring: 30 64 175; // blue-800
+    --color-brand-accent: 239 246 255; // blue-50
+    --color-brand-inverse: 255 255 255; // white
+    --color-brand-text: 59 130 246; // blue-500
+
+    --color-danger: 220 38 38; // red-600
+    --color-danger-active: 185 28 28; // red-700
+    --color-danger-disabled: 147 197 253; // red-300
+    --color-danger-ring: 153 27 27; // red-800
+    --color-danger-accent: 239 246 255; // red-50
+    --color-danger-inverse: 255 255 255; // white
+    --color-danger-text: 239 68 68; // red-500
+  }
+}

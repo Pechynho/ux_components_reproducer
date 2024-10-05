@@ -26,22 +26,11 @@ class CmsContentBlockGroupProvider implements GroupProviderInterface
         $type = $object->getType();
         $shortName = (new ReflectionClass($object))->getShortName();
         if ($type->isTextEditor()) {
+            die;
             return new GroupSequence([$shortName, 'Text']);
         }
         if ($type->isEmbeddedVideo()) {
             return new GroupSequence([$shortName, ['EmbeddedVideoURL', 'EmbeddedVideoId']]);
-        }
-        if ($type->isImage()) {
-            return new GroupSequence([$shortName, ['File', 'Image']]);
-        }
-        if ($type->isVideo()) {
-            return new GroupSequence([$shortName, ['File', 'Video']]);
-        }
-        if ($type->isGallery()) {
-            return new GroupSequence([$shortName, ['FilesCount', 'Images']]);
-        }
-        if ($type->isFiles()) {
-            return new GroupSequence([$shortName, ['FilesCount', 'Files']]);
         }
         throw new NotImplementedException();
     }

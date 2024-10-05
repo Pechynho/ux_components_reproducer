@@ -1,4 +1,4 @@
-<div {{ attributes }}>
+<div {{ attributes.defaults(stimulus_controller('dynamic-page-create-form')) }}>
     {{ form_start(form, {
         attr: stimulus_action('live', 'action:prevent', null, {
             action: 'save',
@@ -11,9 +11,31 @@
         </twig:H5>
         {{ form_row(form.title) }}
         {{ form_row(form.slug) }}
-        {{ form_row(form.restrictAccess) }}
-        {{ form_row(form.accessibleFrom) }}
-        {{ form_row(form.accessibleTo) }}
+        {{ form_row(form.restrictAccess, {
+            attr: html_attributes(
+                {
+                    dataBinding: 'norender|' ~ form.restrictAccess.vars.full_name,
+                },
+                stimulus_target('dynamic-page-create-form', 'restrictAccess'),
+                stimulus_action('dynamic-page-create-form', 'onRestrictAccessChange', 'change'),
+            )
+        }) }}
+        {{ form_row(form.accessibleFrom, {
+            row_attr: html_attributes(
+                stimulus_target('dynamic-page-create-form', 'accessibleFromRow'),
+                {
+                    style: form.restrictAccess.vars.data ? '' : 'display: none',
+                },
+            )
+        }) }}
+        {{ form_row(form.accessibleTo, {
+            row_attr: html_attributes(
+                stimulus_target('dynamic-page-create-form', 'accessibleToRow'),
+                {
+                    style: form.restrictAccess.vars.data ? '' : 'display: none',
+                },
+            )
+        }) }}
     </twig:Card>
     {{ form_row(form.content) }}
     <twig:Card>

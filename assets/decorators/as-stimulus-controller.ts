@@ -1,6 +1,6 @@
 import 'reflect-metadata/lite';
 
-export const asStimulusControllerMetadataId = '@AsStimulusController';
+export const asStimulusControllerMetadataId = '_as_stimulus_controller';
 
 export function AsStimulusController(identifier: string) {
     return function (constructor: Function) {

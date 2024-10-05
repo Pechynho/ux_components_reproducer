@@ -36,7 +36,7 @@ trait ComponentWithCmsContentTrait
     }
 
     #[LiveAction]
-    public function addContentBlock(#[LiveArg] int $type): void
+    public function addContentBlock(#[LiveArg] string $type): void
     {
         $path = $this->getCmsContentBlocksPath();
         $blocks = $this->propertyAccessor->getValue($this->formValues, $path);

@@ -164,3 +164,16 @@
 {% block cms_content_block_widget %}
     {{ block('content_block', 'cms/block/form.html.twig') }}
 {% endblock %}
+
+{% block text_editor_widget %}
+    <twig:Form:TextEditor
+        required="{{ required }}"
+        valid="{{ valid and errors|length == 0 }}"
+        disabled="{{ disabled }}"
+        readOnly="{{ readonly }}"
+        id="{{ id }}"
+        name="{{ full_name }}"
+        mode="{{ mode }}"
+        {{ ...attr }}
+    >{{ value }}</twig:Form:TextEditor>
+{% endblock %}

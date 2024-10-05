@@ -1,0 +1,16 @@
+<twig:Popover:Confirm:Generic
+    text="{{ this.text }}"
+    declineButton="{{ this.declineButton }}"
+    confirmButton="{{ this.confirmButton }}"
+    declineUrl="{{ this.declineUrl }}"
+    confirmUrl="{{ this.confirmUrl }}"
+    textHtml="{{ this.textHtml }}"
+    declineButtonHtml="{{ this.declineButtonHtml }}"
+    confirmButtonHtml="{{ this.confirmButtonHtml }}"
+    {{ ...attributes.defaults({}) }}
+    {{ ...attributes.nested('confirm-button').defaults({theme: 'red'})|array_prefix_keys('confirm-button:') }}
+>
+    <twig:block name="icon">
+        <i class="fa fa-trash text-danger text-xl"></i>
+    </twig:block>
+</twig:Popover:Confirm:Generic>

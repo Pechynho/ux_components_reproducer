@@ -1,0 +1,44 @@
+{% set template_attr = attributes.nested('template').defaults(html_attributes(
+    stimulus_target('popover', 'template'),
+    {
+        id: attributes.all.id is defined ? generate_element_id(attributes.all.id) : generate_element_id(),
+    }
+)) %}
+
+{% set popover_content_attr = attributes.nested('content').defaults({
+    class: 'bg-white dark:bg-gray-700 border border-main border-solid rounded shadow',
+}) %}
+
+{% set attr = attributes.defaults({
+    class: 'absolute group/popover-container caret-bottom [&.caret-top]:pt-[0.69rem] [&.caret-bottom]:pb-[0.69rem] z-[51] max-w-[calc(100vw-2rem)]',
+}) %}
+
+{% set popover_caret_container_attr = attributes.nested('caret-container').defaults({
+    class: 'absolute block group-[.caret-top]/popover-container:top-0 group-[.caret-bottom]/popover-container:bottom-0 w-4 h-3 overflow-hidden',
+    'data-poppover-caret': true,
+}) %}
+
+{% set popover_caret_border_attr = attributes.nested('caret-border').defaults({
+    class: 'w-0 h-0 border-l-[0.5rem] border-l-transparent group-[.caret-top]/popover-container:border-b-[0.75rem] group-[.caret-top]/popover-container:border-b-main group-[.caret-bottom]/popover-container:border-t-[0.75rem] group-[.caret-bottom]/popover-container:border-t-main border-r-[0.5rem] border-r-transparent absolute',
+}) %}
+
+{% set popover_caret_background_attr = attributes.nested('caret-background').defaults({
+    class: 'w-0 h-0 group-[.caret-top]/popover-container:top-[0.125rem] group-[.caret-bottom]/popover-container:bottom-[0.125rem] border-l-[0.5rem] border-l-transparent group-[.caret-top]/popover-container:border-b-[0.75rem] group-[.caret-top]/popover-container:border-b-white dark:group-[.caret-top]/popover-container:border-b-gray-700  group-[.caret-bottom]/popover-container:border-t-[0.75rem] group-[.caret-bottom]/popover-container:border-t-white dark:group-[.caret-bottom]/popover-container:border-t-gray-700 border-r-[0.5rem] border-r-transparent absolute',
+}) %}
+
+<template {{ template_attr }}>
+    <div class="{{ attr.render('class') }}" {{ attr }}>
+        <div
+            class="{{ popover_caret_container_attr.render('class') }}" {{ popover_caret_container_attr }}>
+            <div
+                class="{{ popover_caret_border_attr.render('class') }}" {{ popover_caret_border_attr }}>
+            </div>
+            <div
+                class="{{ popover_caret_background_attr.render('class') }}" {{ popover_caret_background_attr }}>
+            </div>
+        </div>
+        <div class="{{ popover_content_attr.render('class') }}" {{ popover_content_attr }}>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</template>

@@ -1,0 +1,42 @@
+{% set content = block('content') is defined ? block('content')|trim : null %}
+
+{% set attr = attributes.nested('container').defaults(html_attributes(
+    {
+        id: id is not empty ? id ~ '_container' : false,
+        class: 'prose max-w-full ck-editor-container--mode-' ~ mode,
+    },
+    stimulus_controller('text-editor', {
+        mode: mode,
+    }),
+)) %}
+<div class="{{ attr.render('class') }}" {{ attr }}>
+    {% set attr = attributes.defaults(html_attributes(
+        stimulus_target('text-editor', 'textarea'),
+        attributes.nested('textarea').defaults({}),
+        {
+            style: 'display: none;',
+        }
+    )) %}
+    <textarea
+        {% if id is not empty %}
+            id="{{ id }}"
+        {% endif %}
+        {% if name is not empty %}
+            name="{{ name }}"
+        {% endif %}
+        {% if required %}
+            required="required"
+        {% endif %}
+        {% if disabled %}
+            disabled="disabled"
+        {% endif %}
+        {% if readOnly %}
+            readonly="readonly"
+        {% endif %}
+        {% if dataBinding is not null_or_white_space %}
+            data-model="{{ dataBinding }}"
+        {% endif %}
+        class="{{ attr.render('class') }}"
+        {{ attr }}
+>{{ content|raw }}</textarea>
+</div>

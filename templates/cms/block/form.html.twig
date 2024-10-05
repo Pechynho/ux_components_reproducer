@@ -1,0 +1,303 @@
+{% block content %}
+    {% set max_item_index = 0 %}
+    {% for block_form in form.blocks %}
+        {% set item_index = block_form.vars.name %}
+        {% if item_index > max_item_index %}
+            {% set max_item_index = item_index %}
+        {% endif %}
+    {% endfor %}
+    {% set attr = component_attributes(html_attributes(
+        {
+            id: id,
+            class: html_classes(
+            'group/cms-content', {
+                'is-empty': form.blocks|length == 0,
+            }),
+        },
+        attr,
+        stimulus_controller('cms-content', {
+            nextItemIndex: max_item_index + 1,
+        }, {
+            isEmpty: 'is-empty',
+        }),
+        stimulus_action('cms-content', 'moveBlockUp', 'cms-content-block:move-up'),
+        stimulus_action('cms-content', 'moveBlockDown', 'cms-content-block:move-down'),
+        stimulus_action('cms-content', 'removeBlock', 'cms-content-block:remove'),
+        stimulus_action('cms-content', 'onBlockConnected', 'cms-content-block:connected'),
+    )) %}
+    <div class="{{ attr.render('class') }}" {{ attr }}>
+        <hr class="mb-4 border-gray-200 dark:border-gray-700">
+        <div class="flex flex-row justify-end gap-2 mb-3 group-[&.is-empty]/cms-content:hidden">
+            <twig:Button
+                theme="light"
+                size="xs"
+                square
+                title="Minimize all"
+                {{ ...stimulus_action('cms-content', 'minimizeAll', 'click') }}
+            >
+                <twig:Icon:CollapseVertical class="w-[0.8rem] h-[0.8rem]" icon:class="fill-gray-900 dark:fill-white"/>
+            </twig:Button>
+            <twig:Button
+                theme="light"
+                size="xs"
+                square
+                title="Maximize all"
+                {{ ...stimulus_action('cms-content', 'maximizeAll', 'click') }}
+            >
+                <twig:Icon:ExpandVertical class="w-[0.8rem] h-[0.8rem]" icon:class="fill-gray-900 dark:fill-white"/>
+            </twig:Button>
+        </div>
+        <div
+            class="block group-[&.is-empty]/cms-content:hidden"
+            {{ stimulus_target('cms-content', 'items') }}
+        >
+            {% set block_forms = [] %}
+            {% for block_form in form.blocks %}
+                {% set order = block_form.order.vars.data is defined ? block_form.order.vars.data : loop.index0 %}
+                {% set block_forms = block_forms|merge([{form: block_form, order: order}]) %}
+            {% endfor %}
+            {% set block_forms = block_forms|sort((a, b) => a.order <=> b.order)|map((v) => v.form) %}
+            {% for block_form in block_forms %}
+                {{ form_row(block_form, {
+                    row_attr: stimulus_target('cms-content', 'blockRow').toArray(),
+                    live_component: {
+                        enabled: live_component.enabled,
+                        remove_block_action_name: live_component.remove_block_action_name,
+                        index: block_form.vars.name,
+                    }
+                }) }}
+            {% endfor %}
+        </div>
+        <div class="flex flex-col items-center gap-5 pb-4 group-[&:not(.is-empty)]/cms-content:hidden">
+            <i class="fa-solid fa-boxes-stacked text-brand text-7xl"></i>
+            <p class="text-sm text-secondary text-center">
+                You have no blocks yet. Add some by clicking the button below.
+            </p>
+        </div>
+        <hr class="mb-4 border-gray-200 dark:border-gray-700">
+        {% if form.blocks.vars.allow_add and not disabled %}
+            <div class="text-center">
+                <twig:Button
+                    {{ ...stimulus_controller_dropdown(root = 'id|' ~ id, placement = 'bottom') }}
+                    withLoader="{{ live_component.enabled }}"
+                    loaderActions="{{ live_component.add_block_action_name }}"
+                >
+                    <i class="fa fa-circle-plus mr-2"></i> Add block
+                    <twig:Dropdown>
+                        <twig:Dropdown:Menu>
+                            {% for type in allowed_types %}
+                                {% set attr = stimulus_action('cms-content', 'createItem', 'click', {type: type.id}) %}
+                                {% if live_component.enabled %}
+                                    {% set attr = stimulus_action('live', 'action', 'click', {
+                                        action: live_component.add_block_action_name,
+                                        type: type.id,
+                                    }) %}
+                                {% endif %}
+                                <twig:Dropdown:MenuItem closeOnClick{{ ...attr }}>
+                                    {{ type|enum_entity_trans }}
+                                </twig:Dropdown:MenuItem>
+                            {% endfor %}
+                        </twig:Dropdown:Menu>
+                    </twig:Dropdown>
+                </twig:Button>
+            </div>
+        {% endif %}
+        {% if form.blocks.vars.prototype %}
+            <template {{ stimulus_target('cms-content', 'template') }}>
+                {{ form_row(form.blocks.vars.prototype, {
+                    row_attr: stimulus_target('cms-content', 'blockRow').toArray(),
+                    live_component: {
+                        enabled: live_component.enabled,
+                        remove_block_action_name: live_component.remove_block_action_name,
+                        index: '__name__',
+                    }
+                }) }}
+            </template>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content_block %}
+    {% set attr = component_attributes(html_attributes(
+        {
+            id: id,
+            class: '!p-0 group/cms-block-content maximized',
+        },
+        attr,
+        stimulus_controller('cms-content-block', {
+            id: id,
+            class: 'maximized',
+        }, {
+            maximized: 'maximized',
+            minimized: 'minimized',
+        }),
+        stimulus_target('cms-content', 'block'),
+        stimulus_action('cms-content-block', 'setupSettingsDropdown', 'dropdown:dropdown-created'),
+    )) %}
+    {% set type = form.type.vars.data is defined and form.type.vars.data is not empty ? form.type.vars.data : null %}
+    {% set is_valid = form.vars.valid and form.vars.errors|length == 0 %}
+    <twig:Card {{ ...attr }}>
+        <div
+            class="flex flex-row justify-end gap-1 p-4 bg-gray-100 dark:bg-gray-800 group-[&.maximized]/cms-block-content:border-b group-[&.maximized]/cms-block-content:border-main hover:cursor-grab"
+            data-cms-content-block-sortable-handle
+        >
+            <i class="fa-solid fa-grip-vertical text-main self-center mr-2"></i>
+            <p
+                class="{{ html_classes('mr-auto font-semibold self-center text-sm text-ellipsis overflow-hidden whitespace-nowrap', {
+                    'text-main': is_valid,
+                    'text-danger': not is_valid,
+                }) }}"
+                {% if type is not empty %}
+                    title="{{ type|enum_entity_trans }}"
+                    {{ stimulus_controller_popover() }}
+                {% endif %}
+            >
+                {% if not is_valid %}
+                    <i class="fa fa-exclamation-triangle"></i>
+                {% endif %}
+                {% if type is not empty %}
+                    <span {{ stimulus_target('cms-content-block', 'title') }}>{{ type|enum_entity_trans }}</span>
+                    <twig:Popover content:class="p-3">
+                        <p class="text-sm">
+                            {{ type|enum_entity_trans }}
+                        </p>
+                    </twig:Popover>
+                {% endif %}
+            </p>
+            <twig:Button
+                size="xs"
+                theme="light"
+                square
+                title="Maximize"
+                {{ ...html_attributes(
+                    stimulus_action('cms-content-block', 'maximize', 'click'),
+                    stimulus_target('cms-content-block', 'maximizeButton'),
+                ) }}
+                style="display: none;"
+            >
+                <i class="fa-regular fa-window-restore"></i>
+            </twig:Button>
+            <twig:Button
+                size="xs"
+                theme="light"
+                square
+                title="Minimize"
+                {{ ...html_attributes(
+                    stimulus_action('cms-content-block', 'minimize', 'click'),
+                    stimulus_target('cms-content-block', 'minimizeButton'),
+                ) }}
+            >
+                <i class="fa-solid fa-window-minimize"></i>
+            </twig:Button>
+            <twig:Button
+                size="xs"
+                theme="light"
+                title="Menu"
+                square
+                {{ ...stimulus_controller_dropdown(root = 'id|' ~ id) }}
+            >
+                <i class="fa fa-ellipsis-vertical"></i>
+                <twig:Dropdown>
+                    <twig:Dropdown:Menu>
+                        <twig:Dropdown:MenuItem
+                            closeOnClick
+                            {{ ...stimulus_action('cms-content-block', 'toggleTypeVisibility', 'click') }}
+                        >
+                            <i class="fa fa-exchange-alt mr-2"></i> Change type
+                        </twig:Dropdown:MenuItem>
+                        <twig:Dropdown:MenuItem
+                            closeOnClick
+                            {{ ...html_attributes(
+                                stimulus_action('cms-content-block', 'moveUp', 'click'),
+                                stimulus_target('cms-content-block', 'moveUpButton'),
+                            ) }}
+                        >
+                            <i class="fa fa-arrow-up mr-2"></i> Move up
+                        </twig:Dropdown:MenuItem>
+                        <twig:Dropdown:MenuItem
+                            closeOnClick
+                            {{ ...html_attributes(
+                                stimulus_action('cms-content-block', 'moveDown', 'click'),
+                                stimulus_target('cms-content-block', 'moveDownButton'),
+                            ) }}
+                        >
+                            <i class="fa fa-arrow-down mr-2"></i> Move down
+                        </twig:Dropdown:MenuItem>
+                    </twig:Dropdown:Menu>
+                </twig:Dropdown>
+            </twig:Button>
+            <twig:Button
+                size="xs"
+                theme="red"
+                title="Remove"
+                square
+                withLoader="{{ live_component.enabled }}"
+                onlyOpacityLoader
+                {{ ...stimulus_controller_popover(root = 'id|' ~ id, dropdownBehaviour = true) }}
+            >
+                <i class="fa fa-trash"></i>
+                {% set attr = stimulus_action('cms-content-block', 'remove', 'click')|array_prefix_keys('confirm-button:') %}
+                {% if live_component.enabled %}
+                    {% set attr =  stimulus_action('live', 'action', 'click', {
+                        action: live_component.remove_block_action_name,
+                        index: live_component.index,
+                    })|array_prefix_keys('confirm-button:') %}
+                {% endif %}
+                <twig:Popover:Confirm:Delete {{ ...attr }}/>
+            </twig:Button>
+        </div>
+        <div
+            class="p-4"
+            {{ stimulus_target('cms-content-block', 'cardBody') }}
+        >
+            {% set attr = stimulus_target('cms-content-block', 'order').toArray() %}
+            {% if live_component.enabled %}
+                {% set attr = html_attributes(
+                    attr,
+                    {
+                        dataBinding: 'norender|' ~ form.order.vars.full_name,
+                    }
+                ) %}
+            {% endif %}
+            {{ form_row(form.order, {
+                attr: attr,
+            }) }}
+            {{ form_row(form.type, {
+                container_attr: stimulus_target('cms-content-block', 'type').toArray(),
+                attr: stimulus_action('cms-content-block', 'setupLayout', 'change').toArray(),
+                row_attr: html_attributes(
+                    stimulus_target('cms-content-block', 'typeRow'),
+                    {
+                        style: 'display: none;',
+                    }
+                ),
+            }) }}
+            {% set attr = form.text.vars.attr %}
+            {% if live_component.enabled %}
+                {% set attr = html_attributes(
+                    attr,
+                    {
+                        dataBinding: 'norender|' ~ form.text.vars.full_name,
+                    }
+                ) %}
+            {% endif %}
+            {{ form_row(form.text, {
+                row_attr: html_attributes(
+                    stimulus_target('cms-content-block', 'textRow'),
+                    {
+                        style: type.id == CMS_CONTENT_BLOCK_TYPE_TEXT_EDITOR ? false : 'display: none;',
+                    }
+                ),
+                attr: attr,
+            }) }}
+            {{ form_row(form.embeddedVideoUrl, {
+                row_attr: html_attributes(
+                    stimulus_target('cms-content-block', 'embeddedVideoUrlRow'),
+                    {
+                        style: type.id == CMS_CONTENT_BLOCK_TYPE_EMBEDDED_VIDEO ? false : 'display: none;',
+                    }
+                ),
+            }) }}
+        </div>
+    </twig:Card>
+{% endblock %}

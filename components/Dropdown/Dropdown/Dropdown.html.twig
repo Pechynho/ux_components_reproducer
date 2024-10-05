@@ -1,0 +1,16 @@
+{% set attr = attributes.defaults({
+    class: 'absolute border divide-y divide-gray-100 dark:divide-gray-600 border-main bg-white rounded-lg shadow dark:bg-gray-700 block w-max max-w-[calc(100vw-2rem)] group/dropdown-container z-[42]'
+}) %}
+
+{% set template_attr = attributes.nested('template').defaults(html_attributes(
+    stimulus_target(this.controller, 'template'),
+    {
+        id: attributes.all.id is defined ? generate_element_id(attributes.all.id) : generate_element_id(),
+    }
+)) %}
+
+<template class="{{ template_attr.render('class') }}" {{ template_attr }}>
+    <div class="{{ attr.render('class') }}" {{ attr }}>
+        {{ block('content') }}
+    </div>
+</template>

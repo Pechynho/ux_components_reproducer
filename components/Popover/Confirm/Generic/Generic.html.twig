@@ -1,0 +1,77 @@
+{% set container_attr = attributes.nested('confirm-container').defaults({
+    class: 'flex flex-col justify-center items-center gap-3'
+}) %}
+
+{% set text_attr = attributes.nested('confirm-text').defaults({
+    class: 'text-secondary text-xs text-center'
+}) %}
+
+{% set buttons_attr = attributes.nested('confirm-buttons').defaults({
+    class: 'flex flex-row gap-1 w-full'
+}) %}
+
+{% set decline_button_attr = attributes.nested('decline-button').defaults({
+    class: 'grow',
+    theme: 'light',
+    href: declineUrl,
+    size: 'xs',
+    'data-popover-close-on-click': true,
+    disableTurboPrefetch: declineUrl is not empty or (attributes.nested('decline-button').all.href is defined and attributes.nested('decline-button').all.href is not empty),
+}) %}
+
+{% set confirm_button_attr = attributes.nested('confirm-button').defaults({
+    class: 'grow',
+    theme: 'brand',
+    href: confirmUrl,
+    size: 'xs',
+    'data-popover-close-on-click': true,
+    disableTurboPrefetch: confirmUrl is not empty or (attributes.nested('confirm-button').all.href is defined and attributes.nested('confirm-button').all.href is not empty),
+}) %}
+
+{% set icon = block('icon') is defined ? block('icon') : null %}
+
+{% set content = block('content') is defined ? block('content') : null %}
+
+{% set popover_content %}
+    {% if content is not same as(null) and content|trim is not empty %}
+        {{ content|raw }}
+    {% else %}
+        <div class="{{ container_attr.render('class') }}" {{ container_attr }}>
+            {% if icon is not same as(null) and icon|trim is not empty %}
+                {{ icon|raw }}
+            {% endif %}
+            <p class="{{ text_attr.render('class') }}" {{ text_attr }}>
+                {% if textHtml %}
+                    {{ text|raw }}
+                {% else %}
+                    {{ text }}
+                {% endif %}
+            </p>
+            <div class="{{ buttons_attr.render('class') }}" {{ buttons_attr }}>
+                <twig:Button {{ ...decline_button_attr }}>
+                    {% if declineButtonHtml %}
+                        {{ declineButton|raw }}
+                    {% else %}
+                        {{ declineButton }}
+                    {% endif %}
+                </twig:Button>
+                <twig:Button {{ ...confirm_button_attr }}>
+                    {% if confirmButtonHtml %}
+                        {{ confirmButton|raw }}
+                    {% else %}
+                        {{ confirmButton }}
+                    {% endif %}
+                </twig:Button>
+            </div>
+        </div>
+    {% endif %}
+{% endset %}
+
+{% set attr = attributes.defaults({
+    'class': 'w-max',
+    'content:class': 'p-3',
+}) %}
+
+<twig:Popover {{ ...attr }}>
+    {{ popover_content|raw }}
+</twig:Popover>

@@ -1,0 +1,19 @@
+{% block textarea_widget %}
+    <twig:Form:Textarea
+        required="{{ required }}"
+        valid="{{ valid and errors|length == 0 }}"
+        disabled="{{ disabled }}"
+        readOnly="{{ readonly }}"
+        id="{{ id }}"
+        name="{{ full_name }}"
+        {{ ...attr }}
+    >{{ value }}</twig:Form:Textarea>
+{% endblock %}
+
+{% block cms_content_widget %}
+    {{ block('content', 'cms/block/form.html.twig') }}
+{% endblock %}
+
+{% block cms_content_block_widget %}
+    {{ block('content_block', 'cms/block/form.html.twig') }}
+{% endblock %}

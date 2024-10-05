@@ -1,0 +1,52 @@
+{% set defaults = {
+    class: html_classes('block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-main dark:hover:text-white break-words text-left w-full disabled:text-gray-400 disabled:dark:text-gray-400 disabled:pointer-events-none', {
+        'group/dropdown-menu-item [&.loading]:pointer-events-none [&.loading]:opacity-60 [&.opacity-loading]:pointer-events-none [&.opacity-loading]:opacity-60': withLoader,
+    }),
+} %}
+
+{% if closeOnClick %}
+    {% set defaults = defaults|merge({(this.closeOnClickAttributeName): true}) %}
+{% endif %}
+
+{% if withLoader and (loaderActions is empty or onlyOpacityLoader) %}
+    {% set defaults = defaults|merge({'data-loading': onlyOpacityLoader ? 'delay|addClass(opacity-loading)' : 'delay|addClass(loading)'}) %}
+{% elseif withLoader and loaderActions is not empty %}
+    {% set directives = [] %}
+    {% for action in loaderActions %}
+        {% set directives = directives|merge(['delay|action(' ~ action ~ ')|addClass(loading)']) %}
+    {% endfor %}
+    {% set defaults = defaults|merge({'data-loading': directives|join(' ') ~ ' addClass(opacity-loading)'}) %}
+{% endif %}
+
+{% set attr = attributes.defaults(defaults) %}
+
+{% set content = block('content') %}
+
+{% if isChecked or (withLoader and not onlyOpacityLoader) %}
+    {% set content %}
+        <div class="flex flex-row gap-5 justify-between items-center">
+            {% if withLoader and not onlyOpacityLoader %}
+                <div class="inline-flex flex-row justify-start items-center gap-2">
+                    <twig:Icon:Loading
+                        class="h-[1.15rem] w-[1.15rem] group-[:not(.loading)]/dropdown-menu-item:hidden group-[.loading]/dropdown-menu-item:inline-block"
+                        icon:class="stroke-gray-900 dark:stroke-white group-hover/dropdown-menu-item:dark:stroke-white group-disabled/dropdown-menu-item:stroke-gray-400 group-disabled/dropdown-menu-item:dark:stroke-gray-400"
+                    />
+                    <div class="group-[.loading]/dropdown-menu-item:[&>.fa]:hidden group-[.loading]/dropdown-menu-item:[&>.fa-solid]:hidden group-[.loading]/dropdown-menu-item:[&>.fa-regular]:hidden group-[.loading]/dropdown-menu-item:[&>.fa-light]:hidden group-[.loading]/dropdown-menu-item:[&>.fa-brand]:hidden">
+                        {{ content|raw }}
+                    </div>
+                </div>
+            {% else %}
+                <div>
+                    {{ content|raw }}
+                </div>
+            {% endif %}
+            {% if isChecked %}
+                <i class="fa fa-check text-brand"></i>
+            {% endif %}
+        </div>
+    {% endset %}
+{% endif %}
+
+<twig:LinkButton {{ ...attr }} disableTurboPrefetch="{{ this.disableTurboPrefetch }}">
+    {{ content|raw }}
+</twig:LinkButton>

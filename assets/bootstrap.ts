@@ -1,5 +1,6 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'app/styles/bootstrap.scss';
+import 'app/extension/_extensions';
 import {startStimulusApp} from '@symfony/stimulus-bridge';
 import {definitionsFromContext} from "@hotwired/stimulus-webpack-helpers";
 import 'reflect-metadata/lite';

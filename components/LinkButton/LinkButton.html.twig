@@ -1,0 +1,21 @@
+{% set defaults = {} %}
+
+{% if href is empty %}
+    {% set defaults = {type: 'button'} %}
+{% endif %}
+
+{% if href is not empty and disableTurboPrefetch %}
+    {% set defaults = defaults|merge({'data-turbo-prefetch': 'false'}) %}
+{% endif %}
+
+{% set attr = attributes.defaults(defaults) %}
+
+{% if href is not empty %}
+    <a class="{{ attr.render('class')|default }}" href="{{ href }}" {{ attr }}>
+        {{ block('content') is defined ? block('content') : null }}
+    </a>
+{% else %}
+    <button class="{{ attr.render('class') }}" {{ attr }}>
+        {{ block('content') is defined ? block('content') : null }}
+    </button>
+{% endif %}

@@ -1,0 +1,50 @@
+{% set class = '
+shadow-sm
+border
+text-sm
+rounded-lg
+block
+w-full
+p-2.5
+border-main focus:border-brand disabled:border-main
+text-main disabled:text-disabled
+bg-input disabled:bg-input-disabled dark:disabled:bg-input-disabled
+placeholder-main
+focus:ring-brand
+disabled:cursor-not-allowed
+' %}
+
+{% if not valid %}
+    {% set class = class ~ '
+text-danger
+bg-danger-accent dark:bg-input
+border-danger focus:border-danger
+placeholder-danger
+focus:ring-danger
+' %}
+{% endif %}
+
+{% set attr = attributes.defaults({class: class}) %}
+
+<textarea
+    {% if id is not empty %}
+        id="{{ id }}"
+    {% endif %}
+    {% if name is not empty %}
+        name="{{ name }}"
+    {% endif %}
+    {% if required %}
+        required="required"
+    {% endif %}
+    {% if disabled %}
+        disabled="disabled"
+    {% endif %}
+    {% if readOnly %}
+        readonly="readonly"
+    {% endif %}
+    {% if dataBinding is not null_or_white_space %}
+        data-model="{{ dataBinding }}"
+    {% endif %}
+    class="{{ attr.render('class') }}"
+    {{ attr }}
+>{% block content %}{% endblock %}</textarea>

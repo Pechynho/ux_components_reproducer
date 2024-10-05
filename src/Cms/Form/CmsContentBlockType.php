@@ -39,15 +39,14 @@ class CmsContentBlockType extends AbstractType
             ),
         );
         $builder->add('type', CmsContentBlockSelectType::class, [
-            'choices' => $options['allowed_types'],
-            'label' => 'label.type',
+            'label' => 'Type',
         ]);
         $builder->add('order', HiddenType::class);
         $builder->add('text', TextEditorType::class, [
             'label' => false,
         ]);
         $builder->add('embeddedVideoUrl', TextType::class, [
-            'label' => 'label.url',
+            'label' => 'URL',
         ]);
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
             $block = $event->getData();
@@ -70,13 +69,10 @@ class CmsContentBlockType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['live_component'] = $options['live_component'];
-        foreach (
-            [
-                CmsContentBlockTypeEnum::TextEditor,
-                CmsContentBlockTypeEnum::EmbeddedVideo,
-            ] as $key => $id
-        ) {
-            $view->vars[sprintf('CMS_CONTENT_BLOCK_TYPE_%s', strtoupper($key))] = $id;
+        $types = CmsContentBlockTypeEnum::all();
+        $view->vars['types'] = $types;
+        foreach ($types as $type) {
+            $view->vars[sprintf('CMS_CONTENT_BLOCK_TYPE_%s', strtoupper($type->value))] = $type->value;
         }
     }
 

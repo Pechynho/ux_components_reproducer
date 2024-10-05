@@ -1,0 +1,25 @@
+<div {{ attributes }}>
+    {{ form_start(form, {
+        attr: stimulus_action('live', 'action:prevent', null, {
+            action: 'save',
+        }).toArray(),
+    }) }}
+    {{ form_errors(form) }}
+    <twig:Card class="mb-4">
+        <twig:H5 class="mb-5">
+            Basic info
+        </twig:H5>
+        {{ form_row(form.title) }}
+        {{ form_row(form.slug) }}
+        {{ form_row(form.restrictAccess) }}
+        {{ form_row(form.accessibleFrom) }}
+        {{ form_row(form.accessibleTo) }}
+    </twig:Card>
+    {{ form_row(form.content) }}
+    <twig:Card>
+        <twig:Button type="submit" withLoader loaderActions="save" formNoValidate>
+            <i class="fa fa-save mr-2"></i> Save
+        </twig:Button>
+    </twig:Card>
+    {{ form_end(form) }}
+</div>

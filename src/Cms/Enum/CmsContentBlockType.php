@@ -27,4 +27,15 @@ enum CmsContentBlockType: string implements TranslatableInterface
             self::EmbeddedVideo => 'Embedded video',
         };
     }
+
+    /**
+     * @return array<self>
+     */
+    public static function all(): array
+    {
+        return [
+            self::TextEditor,
+            self::EmbeddedVideo,
+        ];
+    }
 }

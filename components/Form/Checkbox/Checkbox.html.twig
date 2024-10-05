@@ -1,0 +1,127 @@
+{% set class = '
+w-4
+h-4
+rounded
+bg-input checked:bg-brand focus:checked:bg-brand disabled:bg-input-disabled disabled:checked:bg-brand-disabled focus:bg-input
+border-main
+focus:ring-transparent
+focus:ring-offset-transparent
+disabled:cursor-not-allowed
+z-[1]
+' %}
+
+{% set help_id = id is not empty ? id ~ '_help' : null %}
+
+{% set attr = attributes.defaults(html_attributes(
+    attributes.nested('input'),
+    {class: class},
+    help is not empty and help_id is not empty? {'aria-describedby': help_id} : {},
+)) %}
+
+{% set container_attr = attributes.nested('container').defaults({
+    class:' flex group/checkbox'
+}) %}
+
+{% set input_container_attr = attributes.nested('input-container').defaults({
+    class: 'flex items-center h-5 relative'
+}) %}
+
+{% set label_container_attr = attributes.nested('label-container').defaults({
+    class: 'ms-2 text-sm',
+}) %}
+
+{% set class = '
+font-medium
+text-main
+group-has-[input[disabled][type=checkbox]]/checkbox:text-disabled
+group-has-[input[disabled][type=checkbox]]/checkbox:cursor-not-allowed
+' %}
+
+{% if not valid %}
+    {% set class = class ~ 'text-danger' %}
+{% endif %}
+
+{% set label_attr = attributes.nested('label').defaults({class: class}) %}
+
+{% set help_attr = attributes.nested('help').defaults(
+    {class: 'text-xs text-secondary'}|merge(help_id is empty ? {} : {id: help_id})
+) %}
+
+{% set input_focus_border_class = '
+absolute
+border-2
+rounded-[0.45rem]
+border-brand
+h-[1.5rem]
+w-[1.5rem]
+left-[-0.25rem]
+hidden
+group-has-[input:focus[type=checkbox]]/checkbox:block
+z-0
+' %}
+
+{% set input_focus_border_attr = attributes.nested('input-focus-border').defaults({class: input_focus_border_class}) %}
+
+<div class="{{ container_attr.render('class') }}" {{ container_attr }}>
+    <div class="{{ input_container_attr.render('class') }}" {{ input_container_attr }}>
+        <div class="{{ input_focus_border_attr.render('class') }}" {{ input_focus_border_attr }}>
+        </div>
+        <input
+            type="checkbox"
+            {% if id is not empty %}
+                id="{{ id }}"
+            {% endif %}
+            {% if name is not empty %}
+                name="{{ name }}"
+            {% endif %}
+            {% if required %}
+                required="required"
+            {% endif %}
+            {% if disabled %}
+                disabled="disabled"
+            {% endif %}
+            {% if value is not empty %}
+                value="{{ value }}"
+            {% endif %}
+            {% if checked %}
+                checked="checked"
+            {% endif %}
+            {% if dataBinding is not null_or_white_space %}
+                data-model="{{ dataBinding }}"
+            {% endif %}
+            class="{{ attr.render('class') }}"
+            {{ attr }}
+        />
+    </div>
+    {% if (label is not same as(false) and label|trim is not empty) or (help is not same as(false) and help|trim is not empty) %}
+        <div
+            class="{{ label_container_attr.render('class') }}"
+            {{ label_container_attr }}
+        >
+            {% if label is not same as(false) %}
+                <label
+                    {% if id is not empty %}
+                        for="{{ id }}"
+                    {% endif %}
+                    class="{{ label_attr.render('class') }}"
+                    {{ label_attr }}
+                >
+                    {% if labelHtml %}
+                        {{ label|raw }}
+                    {% else %}
+                        {{ label }}
+                    {% endif %}
+                </label>
+            {% endif %}
+            {% if help is not same as(false) and help is not null_or_white_space %}
+                <p class="{{ help_attr.render('class') }}" {{ help_attr }}>
+                    {% if helpHtml %}
+                        {{ help|raw }}
+                    {% else %}
+                        {{ help }}
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,201 @@
+.flatpickr-calendar {
+  @apply bg-white #{!important};
+  @apply dark:bg-gray-700 #{!important};
+  @apply shadow-lg #{!important};
+  @apply rounded #{!important};
+  @apply overflow-hidden #{!important};
+  @apply border #{!important};
+  @apply border-main #{!important};
+  @apply border-solid #{!important};
+  &:after, &:before {
+    @apply hidden #{!important};
+  }
+
+  .flatpickr-months {
+
+    .flatpickr-prev-month, .flatpickr-next-month {
+      svg {
+        @apply hidden #{!important};
+      }
+
+      &.flatpickr-prev-month:before {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        content: '\f053';
+        @apply font-semibold text-xs text-main relative -top-[0.25rem] hover:text-brand;
+      }
+
+      &.flatpickr-next-month:before {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        content: '\f054';
+        @apply font-semibold text-xs text-main relative -top-[0.25rem] hover:text-brand;
+      }
+    }
+
+    .flatpickr-month {
+      @apply bg-neutral-300 #{!important};
+      @apply dark:bg-gray-700 #{!important};
+
+      .flatpickr-current-month {
+
+        .flatpickr-monthDropdown-months {
+          @apply bg-neutral-300 #{!important};
+          @apply dark:bg-gray-700 #{!important};
+          @apply text-main #{!important};
+          @apply font-semibold #{!important};
+          @apply text-sm #{!important};
+          @apply mr-[1px] #{!important};
+
+          &:focus {
+            box-shadow: none !important;
+          }
+
+          .flatpickr-monthDropdown-month {
+            @apply text-main #{!important};
+            @apply bg-neutral-300 #{!important};
+            @apply dark:bg-gray-700 #{!important};
+            @apply font-normal #{!important};
+            @apply text-sm #{!important};
+          }
+        }
+
+        .numInputWrapper {
+          @apply bg-neutral-300 #{!important};
+          @apply dark:bg-gray-700 #{!important};
+
+          .numInput {
+            @apply text-main #{!important};
+            @apply font-semibold #{!important};
+            @apply text-sm #{!important};
+            @apply border #{!important};
+            @apply focus:border-brand #{!important};
+
+            &:focus {
+              box-shadow: none !important;
+            }
+          }
+
+          .arrowUp, .arrowDown {
+            &.arrowUp:after {
+              @apply border-b-gray-900 #{!important};
+              @apply dark:border-b-white #{!important};
+            }
+
+            &.arrowDown:after {
+              @apply border-t-gray-900 #{!important};
+              @apply dark:border-t-white #{!important};
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .flatpickr-innerContainer {
+    .flatpickr-rContainer {
+      .flatpickr-weekdays {
+        @apply bg-neutral-300 #{!important};
+        @apply dark:bg-gray-700 #{!important};
+        @apply dark:border #{!important};
+        @apply dark:border #{!important};
+        @apply dark:border-t-0 #{!important};
+        @apply dark:border-l-0 #{!important};
+        @apply dark:border-r-0 #{!important};
+        @apply dark:border-b-gray-600 #{!important};
+
+        .flatpickr-weekday {
+          @apply bg-neutral-300 #{!important};
+          @apply dark:bg-gray-700 #{!important};
+          @apply text-main #{!important};
+          @apply font-semibold #{!important};
+          @apply text-sm #{!important};
+        }
+      }
+
+      .flatpickr-days {
+        @apply bg-white #{!important};
+        @apply dark:bg-gray-700 #{!important};
+
+        .dayContainer {
+          .flatpickr-day {
+            @apply inline-flex #{!important};
+            @apply items-center #{!important};
+            @apply justify-center #{!important};
+            @apply text-sm #{!important};
+            @apply text-main #{!important};
+            @apply hover:bg-neutral-200 #{!important};
+            @apply hover:border-neutral-200 #{!important};
+            @apply dark:hover:bg-gray-600 #{!important};
+            @apply dark:hover:border-gray-600 #{!important};
+
+            &.prevMonthDay, &.nextMonthDay {
+              @apply text-secondary #{!important};
+            }
+
+            &.today {
+              @apply border-main #{!important};
+            }
+
+            &.selected, &:hover.selected {
+              @apply border-brand #{!important};
+              @apply bg-brand #{!important};
+              @apply text-white #{!important};
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .flatpickr-time {
+    @apply border-t-main #{!important};
+    @apply bg-white #{!important};
+    @apply dark:bg-gray-700 #{!important};
+    @apply hover:bg-white #{!important};
+    @apply hover:dark:bg-gray-700 #{!important};
+
+    .numInputWrapper {
+      @apply hover:bg-white #{!important};
+      @apply hover:dark:bg-gray-700 #{!important};
+
+      .numInput {
+        @apply text-main #{!important};
+        @apply font-semibold #{!important};
+        @apply text-sm #{!important};
+        @apply hover:bg-white #{!important};
+        @apply hover:dark:bg-gray-700 #{!important};
+        @apply focus:bg-white #{!important};
+        @apply focus:dark:bg-gray-700 #{!important};
+
+        &:focus {
+          box-shadow: none !important;
+        }
+      }
+
+      .arrowUp, .arrowDown {
+        @apply hover:bg-white #{!important};
+        @apply hover:dark:bg-gray-700 #{!important};
+
+        &.arrowUp:after {
+          @apply border-b-gray-900 #{!important};
+          @apply dark:border-b-white #{!important};
+        }
+
+        &.arrowDown:after {
+          @apply border-t-gray-900 #{!important};
+          @apply dark:border-t-white #{!important};
+        }
+      }
+    }
+
+    .flatpickr-time-separator {
+      @apply text-main #{!important};
+      @apply font-semibold #{!important};
+      @apply text-sm #{!important};
+      @apply inline-flex #{!important};
+      @apply items-center #{!important};
+      @apply justify-center #{!important};
+    }
+  }
+}

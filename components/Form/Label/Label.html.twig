@@ -1,0 +1,27 @@
+{% set class = '
+block
+text-sm
+font-medium
+text-main
+' %}
+
+{% if not valid %}
+    {% set class = class ~ ' text-danger' %}
+{% endif %}
+
+{% if required %}
+    {% set class = class ~ '
+after:content-["*"]
+after:text-danger
+after:ml-1
+' %}
+{% endif %}
+
+{% set attr = attributes.defaults({class: class}) %}
+
+<label
+    class="{{ attr.render('class') }}"
+    {{ attr }}
+>
+    {% block content %}{% endblock %}
+</label>

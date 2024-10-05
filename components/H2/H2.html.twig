@@ -1,0 +1,4 @@
+{% set attr = attributes.defaults({
+    class: 'text-4xl font-bold dark:text-white',
+}) %}
+<h2 class="{{ attr.render('class') }}" {{ attr }}>{% block content %}{% endblock %}</h2>

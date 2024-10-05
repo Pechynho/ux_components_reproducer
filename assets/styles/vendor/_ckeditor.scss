@@ -1,0 +1,128 @@
+:root {
+  --ck-font-face: Inter, ui-sans-serif, system-ui;
+  --ck-color-text: rgb(var(--color-text-main));
+  --ck-color-base-border: rgb(var(--color-border-main));
+  --ck-color-focus-border: rgb(var(--color-brand-active));
+  --ck-border-radius: 0;
+  --ck-color-link-default: #2563eb;
+  --ck-color-button-action-text: rgb(255 255 255);
+}
+
+html.dark {
+  --ck-color-base-background: rgb(31 41 55);
+  --ck-color-button-default-hover-background: rgb(55 65 81);
+  --ck-color-button-on-hover-background: rgb(55 65 81);
+  --ck-color-button-default-active-background: rgb(55 65 81);
+  --ck-color-button-on-color: rgb(var(--color-text-main));
+  --ck-color-button-on-background: rgb(55 65 81);
+  --ck-color-split-button-hover-background: rgb(55 65 81);
+  --ck-color-split-button-hover-border: rgb(var(--color-border-main));
+  --ck-accessibility-help-dialog-code-background-color: rgb(17 24 39);
+  --ck-color-tooltip-text: rgb(var(--color-text-main));
+  --ck-color-tooltip-background: #374151;
+  --ck-color-link-default: #3b82f6;
+}
+
+.ck.ck-editor__editable_inline:not(.ck-comment__input *) {
+  @apply h-[25vh];
+}
+
+.ck.ck-sticky-panel__content {
+  @apply rounded-t-lg #{!important};
+}
+
+.ck.ck-editor__main {
+  .ck.ck-content {
+    @apply rounded-b-lg;
+  }
+}
+
+.ck.ck-menu-bar {
+  @apply rounded-t-lg
+}
+
+.ck-editor-container--mode-simple {
+  .ck.ck-toolbar {
+    @apply rounded-t-lg
+  }
+}
+
+.ck-content {
+  p, strong, span, strike, i, u, s, em, sup, sub, b, h1, h2, h3, h4, h5, h6, pre, code, blockquote, hr, ul, ol, li, a {
+    @apply text-main;
+  }
+
+  hr {
+    border-color: rgb(var(--color-border-main));
+  }
+
+  ul, ol {
+    li {
+      @apply text-main;
+
+      &::marker {
+        @apply text-main;
+      }
+    }
+  }
+
+  a {
+    @apply font-medium text-blue-600 dark:text-blue-500 hover:underline inline;
+  }
+
+  blockquote {
+    border-color: rgb(var(--color-border-main));
+  }
+
+  .text-tiny {
+    @apply text-xs;
+  }
+
+  .text-small {
+    @apply text-sm;
+  }
+
+  .text-big {
+    @apply text-lg;
+  }
+
+  .text-huge {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-3xl font-bold dark:text-white;
+  }
+
+  h4 {
+    @apply text-2xl font-bold dark:text-white;
+  }
+
+  H5 {
+    @apply text-xl font-bold dark:text-white;
+  }
+}
+
+body:has(.ck.ck-fullscreen-mode) {
+  @apply overflow-hidden;
+}
+
+.ck.ck-editor.ck-fullscreen-mode {
+  @apply flex flex-col fixed top-0 right-0 bottom-0 left-0 z-[1000] max-w-full max-h-full;
+
+  .ck.ck-content.ck-editor__editable, .ck.ck-editor__main {
+    @apply h-full resize-none overflow-auto #{!important};
+  }
+
+  .ck.ck-sticky-panel__content {
+    @apply rounded-none #{!important};
+  }
+
+  .ck.ck-editor__main .ck.ck-content {
+    @apply rounded-none #{!important};
+  }
+
+  .ck.ck-menu-bar {
+    @apply rounded-none #{!important};
+  }
+}

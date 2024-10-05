@@ -16,12 +16,14 @@
         "symfony/framework-bundle": "6.4.*",
         "symfony/options-resolver": "6.4.*",
         "symfony/runtime": "6.4.*",
+        "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/ux-live-component": "^2.20",
         "symfony/ux-twig-component": "^2.20",
         "symfony/validator": "6.4.*",
         "symfony/webpack-encore-bundle": "^2.2",
-        "symfony/yaml": "6.4.*"
+        "symfony/yaml": "6.4.*",
+        "twig/html-extra": "^3.13"
     },
     "config": {
         "allow-plugins": {
@@ -71,5 +73,8 @@
             "allow-contrib": false,
             "require": "6.4.*"
         }
+    },
+    "require-dev": {
+        "symfony/web-profiler-bundle": "6.4.*"
     }
 }

@@ -1,0 +1,130 @@
+{% set attr = attributes.defaults(
+    stimulus_controller('alert', {
+        autoCloseTimeout: autoCloseTimeout,
+        removeAfterClose: removeAfterClose,
+    })
+    |merge({
+        role: 'alert',
+    })
+) %}
+
+{% set cva = html_cva(
+    base = 'p-4 mb-4 border rounded-lg',
+    variants = {
+        theme: {
+            info: 'text-blue-800 border-blue-300 bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800',
+            danger: 'text-red-800 border-red-300 bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800',
+            success: 'text-green-800 border-green-300 bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800',
+            warning: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800',
+            dark: 'border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800 text-gray-800 dark:text-gray-300',
+        }
+    }
+) %}
+
+{% if icon is empty and block('icon') is defined %}
+    {% set icon = block('icon') %}
+{% endif %}
+
+{% if autoIcon and icon is empty %}
+    {% set icon %}
+        {% if theme == 'info' %}
+            <i class="fa fa-info-circle"></i>
+        {% elseif theme == 'danger' %}
+            <i class="fa fa-exclamation-circle"></i>
+        {% elseif theme == 'success' %}
+            <i class="fa fa-check-circle"></i>
+        {% elseif theme == 'warning' %}
+            <i class="fa fa-exclamation-triangle"></i>
+        {% endif %}
+    {% endset %}
+{% endif %}
+
+{% set title_attr = attr.nested('title').defaults({
+    class: 'text-lg font-medium mb-2',
+}) %}
+
+{% set block_content = block('content') %}
+
+{% set close_button_attr = attributes.nested('close-button').defaults(
+    stimulus_action('alert', 'close')
+    |merge({
+        type: 'button',
+    })
+) %}
+
+{% set close_button_cva = html_cva(
+    base = 'rounded-lg focus:ring-2 p-1.5 min-h-8 max-h-8 min-w-8 max-h-8 -mx-1.5 -my-1.5 leading-none',
+    variants = {
+        theme: {
+            info: 'bg-blue-50 text-blue-500 focus:ring-blue-400 hover:bg-blue-200 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700',
+            danger: 'bg-red-50 text-red-500 focus:ring-red-400 hover:bg-red-200 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700',
+            success: 'bg-green-50 text-green-500 focus:ring-green-400 hover:bg-green-200 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700',
+            warning: 'bg-yellow-50 text-yellow-500 focus:ring-yellow-400 hover:bg-yellow-200 dark:bg-gray-800 dark:text-yellow-300 dark:hover:bg-gray-700',
+            dark: 'bg-gray-50 text-gray-500 focus:ring-gray-400 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white',
+        }
+    }
+) %}
+
+{% set close_button %}
+    <button
+        class="{{ close_button_cva.apply({theme: theme}, close_button_attr.render('class')) }}" {{ close_button_attr }}>
+        <i class="fa fa-times"></i>
+    </button>
+{% endset %}
+
+<div class="{{ cva.apply({theme: theme}, attr.render('class')) }}" {{ attr }}>
+    {% if title is not empty %}
+        {% if withCloseButton %}
+            <div class="flex flex-row justify-between gap-3">
+                <h3 class="{{ title_attr.render('class') }}" {{ title_attr }}>
+                    {% if icon|trim is not empty %}
+                        {{ icon|raw }}
+                    {% endif %}
+                    {{ title }}
+                </h3>
+                {{ close_button|raw }}
+            </div>
+        {% else %}
+            <h3 class="{{ title_attr.render('class') }}" {{ title_attr }}>
+                {% if icon|trim is not empty %}
+                    {{ icon|raw }}
+                {% endif %}
+                {{ title }}
+            </h3>
+        {% endif %}
+        {{ block_content|raw }}
+    {% else %}
+        {% if withCloseButton %}
+            <div class="flex flex-row justify-between gap-3">
+                {% if icon is not empty %}
+                    <div class="flex flex-row justify-start gap-3">
+                        <div class="self-center">
+                            {{ icon|raw }}
+                        </div>
+                        <div>
+                            {{ block_content|raw }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div>
+                        {{ block_content|raw }}
+                    </div>
+                {% endif %}
+                {{ close_button|raw }}
+            </div>
+        {% else %}
+            {% if icon is not empty %}
+                <div class="flex flex-row justify-start gap-3">
+                    <div class="self-center">
+                        {{ icon|raw }}
+                    </div>
+                    <div>
+                        {{ block_content|raw }}
+                    </div>
+                </div>
+            {% else %}
+                {{ block_content|raw }}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

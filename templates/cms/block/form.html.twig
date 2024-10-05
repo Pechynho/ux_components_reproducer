@@ -85,16 +85,16 @@
                     <i class="fa fa-circle-plus mr-2"></i> Add block
                     <twig:Dropdown>
                         <twig:Dropdown:Menu>
-                            {% for type in allowed_types %}
-                                {% set attr = stimulus_action('cms-content', 'createItem', 'click', {type: type.id}) %}
+                            {% for type in types %}
+                                {% set attr = stimulus_action('cms-content', 'createItem', 'click', {type: type.value}) %}
                                 {% if live_component.enabled %}
                                     {% set attr = stimulus_action('live', 'action', 'click', {
                                         action: live_component.add_block_action_name,
-                                        type: type.id,
+                                        type: type.value,
                                     }) %}
                                 {% endif %}
                                 <twig:Dropdown:MenuItem closeOnClick{{ ...attr }}>
-                                    {{ type|enum_entity_trans }}
+                                    {{ type|translate_enum }}
                                 </twig:Dropdown:MenuItem>
                             {% endfor %}
                         </twig:Dropdown:Menu>
@@ -148,7 +148,7 @@
                     'text-danger': not is_valid,
                 }) }}"
                 {% if type is not empty %}
-                    title="{{ type|enum_entity_trans }}"
+                    title="{{ type|translate_enum }}"
                     {{ stimulus_controller_popover() }}
                 {% endif %}
             >
@@ -156,10 +156,10 @@
                     <i class="fa fa-exclamation-triangle"></i>
                 {% endif %}
                 {% if type is not empty %}
-                    <span {{ stimulus_target('cms-content-block', 'title') }}>{{ type|enum_entity_trans }}</span>
+                    <span {{ stimulus_target('cms-content-block', 'title') }}>{{ type|translate_enum }}</span>
                     <twig:Popover content:class="p-3">
                         <p class="text-sm">
-                            {{ type|enum_entity_trans }}
+                            {{ type|translate_enum }}
                         </p>
                     </twig:Popover>
                 {% endif %}
@@ -285,7 +285,7 @@
                 row_attr: html_attributes(
                     stimulus_target('cms-content-block', 'textRow'),
                     {
-                        style: type.id == CMS_CONTENT_BLOCK_TYPE_TEXT_EDITOR ? false : 'display: none;',
+                        style: type.value == CMS_CONTENT_BLOCK_TYPE_TEXT_EDITOR ? false : 'display: none;',
                     }
                 ),
                 attr: attr,
@@ -294,7 +294,7 @@
                 row_attr: html_attributes(
                     stimulus_target('cms-content-block', 'embeddedVideoUrlRow'),
                     {
-                        style: type.id == CMS_CONTENT_BLOCK_TYPE_EMBEDDED_VIDEO ? false : 'display: none;',
+                        style: type.value == CMS_CONTENT_BLOCK_TYPE_EMBEDDED_VIDEO ? false : 'display: none;',
                     }
                 ),
             }) }}

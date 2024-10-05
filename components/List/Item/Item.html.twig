@@ -1,0 +1,7 @@
+{% set attr = attributes.defaults({}) %}
+<li
+    class="{{ attr.render('class') }}"
+    {{ attr }}
+>
+    {% block content %}{% endblock %}
+</li>

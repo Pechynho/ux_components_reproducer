@@ -1,0 +1,18 @@
+{% set attr = attributes.defaults({}) %}
+
+{% set cva = html_cva(
+    base = 'space-y-1',
+    variants = {
+        type: {
+            disc: 'list-disc list-inside',
+            none: 'list-none'
+        }
+    }
+) %}
+
+<ul
+    class="{{ cva.apply({type: type}, attr.render('class')) }}"
+    {{ attr }}
+>
+    {% block content %}{% endblock %}
+</ul>

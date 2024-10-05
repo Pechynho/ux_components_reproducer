@@ -1,0 +1,147 @@
+{% if type == 'range' or type == 'color' %}
+    {% set required = false %}
+{% endif %}
+
+{% if iconAutodetect and icon is null %}
+    {% if type == 'email' %}
+        {% set icon %}
+            <i class="fa fa-envelope"></i>
+        {% endset %}
+    {% elseif type == 'password' %}
+        {% set icon %}
+            <i class="fa fa-lock"></i>
+        {% endset %}
+    {% elseif type == 'url' %}
+        {% set icon %}
+            <i class="fa fa-link"></i>
+        {% endset %}
+    {% elseif type == 'tel' %}
+        {% set icon %}
+            <i class="fa fa-phone"></i>
+        {% endset %}
+    {% elseif type == 'search' %}
+        {% set icon %}
+            <i class="fa fa-search"></i>
+        {% endset %}
+    {% elseif type == 'date' %}
+        {% set icon %}
+            <i class="fa fa-calendar"></i>
+        {% endset %}
+    {% elseif type == 'time' %}
+        {% set icon %}
+            <i class="fa fa-clock"></i>
+        {% endset %}
+    {% elseif type == 'datetime' %}
+        {% set icon %}
+            <i class="fa fa-calendar"></i>
+        {% endset %}
+    {% elseif type == 'number' %}
+        {% set icon %}
+            <i class="fa fa-hashtag"></i>
+        {% endset %}
+    {% endif %}
+{% endif %}
+
+{% set class = '
+shadow-sm
+border
+text-sm
+rounded-lg
+block
+w-full
+p-2.5
+border-main focus:border-brand disabled:border-main
+text-main disabled:text-disabled
+bg-input disabled:bg-input-disabled dark:disabled:bg-input-disabled
+placeholder-main
+focus:ring-brand
+disabled:cursor-not-allowed
+' %}
+
+{% if not valid %}
+    {% set class = class ~ '
+text-danger
+bg-danger-accent dark:bg-input
+border-danger focus:border-danger
+placeholder-danger
+focus:ring-danger
+' %}
+{% endif %}
+
+
+{% set icon_container_class = '
+absolute
+left-3
+top-[0.75rem]
+text-sm
+text-main peer-disabled:text-disabled
+peer-disabled:cursor-not-allowed
+' %}
+
+{% if icon is not null %}
+    {% set class = (class ~ ' pl-8 peer') %}
+    {% if not valid %}
+        {% set icon_container_class = icon_container_class ~ ' text-danger' %}
+    {% endif %}
+{% endif %}
+
+{% if type == 'hidden' %}
+    {% set class = '' %}
+{% endif %}
+
+{% set attr = attributes.defaults(html_attributes(
+    {class: class},
+    attributes.nested('input').defaults({}),
+)) %}
+
+{% set icon_container_attr = attributes.defaults({class: icon_container_class}) %}
+
+{% set input %}
+    <input
+        type="{{ type }}"
+        {% if id is not empty %}
+            id="{{ id }}"
+        {% endif %}
+        {% if name is not empty %}
+            name="{{ name }}"
+        {% endif %}
+        {% if required %}
+            required="required"
+        {% endif %}
+        {% if disabled %}
+            disabled="disabled"
+        {% endif %}
+        {% if readOnly %}
+            readonly="readonly"
+        {% endif %}
+        {% if value is not empty %}
+            value="{{ value }}"
+        {% endif %}
+        {% if dataBinding is not null_or_white_space %}
+            data-model="{{ dataBinding }}"
+        {% endif %}
+        class="{{ attr.render('class') }}"
+        {{ attr }}
+    />
+{% endset %}
+
+{% if icon is not null %}
+    {% set attr = attributes.nested('container').defaults({
+        class: 'relative',
+    }) %}
+    <div class="{{ attr.render('class') }}" {{ attr }}>
+        {{ input|raw }}
+        <div
+            class="{{ icon_container_attr.render('class') }}"
+            {{ icon_container_attr }}
+        >
+            {{ icon|raw }}
+        </div>
+    </div>
+{% else %}
+    {{ input|raw }}
+{% endif %}
+
+
+
+
